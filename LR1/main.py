@@ -1,8 +1,8 @@
 from src.password_generator import PasswordGenerator
-import random
+
 
 if __name__ == '__main__':
-    password = PasswordGenerator.generate_password(random.randint(8, 20))
+    password = PasswordGenerator.generate_password(int(input("Enter password length: ")))
     print(f'Your random password is: {password}')
     PasswordGenerator.show_frequency_distribution(password)
     print(f'Average time of cracking 3-symbol password (10 times) is '

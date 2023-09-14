@@ -34,7 +34,7 @@ class PasswordGenerator:
     def average_crack_time(cls, password: str, num_of_tries: int) -> float:
         """Вычисление среднего времени подбора пароля"""
         all_tries_time = sum([cls.__crack_password_time(password) for _ in range(num_of_tries)])
-        return all_tries_time / num_of_tries
+        return round(all_tries_time / num_of_tries, 3)
 
     @classmethod
     def average_crack_time_plot(cls, min_length: int = 8, max_length: int = 20, num_of_tries: int = 10):
