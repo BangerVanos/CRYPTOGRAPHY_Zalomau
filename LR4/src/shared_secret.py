@@ -12,7 +12,7 @@ class SharedSecretGenerator:
         return True
 
     @classmethod
-    def modulus_pow(cls, base, exponent, mod):
+    def modulus_pow(cls, base, exponent, mod=1):
         if exponent == 0:
             return 1
         result = 1
