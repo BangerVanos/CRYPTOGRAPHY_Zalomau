@@ -3,12 +3,12 @@ class SharedSecretGenerator:
 
     @classmethod
     def is_primitive_element(cls, primitive, primary):
-        residues = set()
+        pow_mod_remainders = set()
         for i in range(1, primary):
-            residue = cls.modulus_pow(primitive, i, primary)
-            if residue in residues:
+            remainder = cls.modulus_pow(primitive, i, primary)
+            if remainder in pow_mod_remainders:
                 return False
-            residues.add(residue)
+            pow_mod_remainders.add(remainder)
         return True
 
     @classmethod
@@ -37,8 +37,8 @@ class SharedSecretGenerator:
     @classmethod
     def generate_shared_secret(cls, primary, primitive, alice_key, bob_key):
         shared_secret = cls.modulus_pow(primitive, alice_key * bob_key, primary)
-        alice_mod = cls.modulus_pow(primitive, alice_key, primary)
-        bob_mod = cls.modulus_pow(primitive, bob_key, primary)
-        if cls.modulus_pow(alice_mod, bob_key, primary) != cls.modulus_pow(bob_mod, alice_key, primary):
+        alice_open = cls.modulus_pow(primitive, alice_key, primary)
+        bob_open = cls.modulus_pow(primitive, bob_key, primary)
+        if cls.modulus_pow(alice_open, bob_key, primary) != cls.modulus_pow(bob_open, alice_key, primary):
             raise ValueError('Shared secrets are not the same!')
         return shared_secret

@@ -1,5 +1,6 @@
 import dearpygui.dearpygui as dpg
 from src.image_encryption import ImageEncrypter
+import random
 
 
 class App:
@@ -8,6 +9,8 @@ class App:
         self.window_w = window_w
         self.dialog_filters = ['.jpeg', '.jpg', '.png']
         self.__image_path: str = ''
+        self.__aes_key_length = (16, 24, 32)
+        self.__des_key_length = (8,)
 
     def run(self):
         dpg.create_context()
@@ -37,9 +40,10 @@ class App:
                 dpg.add_table_column(label='Choose encryption mode')
                 dpg.add_table_column(label='Enter encryption key')
                 with dpg.table_row():
-                    dpg.add_radio_button(tag='algorithm', items=['AES', 'DES'], default_value='AES')
+                    dpg.add_radio_button(tag='algorithm', items=['AES', 'DES'], default_value='AES',
+                                         callback=self.__generate_key)
                     dpg.add_radio_button(tag='mode', items=['ECB', 'CBC', 'CFB', 'OFB', 'CTR'], default_value='ECB')
-                    dpg.add_input_text(tag='key', default_value='')
+                    dpg.add_input_text(tag='key', default_value='0000000000000000')
             with dpg.table():
                 dpg.add_table_column(label='')
                 dpg.add_table_column(label='')
@@ -69,9 +73,10 @@ class App:
     def __encrypt_image(self):
         if self.__image_path is None or self.__image_path == '':
             return
-        min_key_length = 16 if dpg.get_value('algorithm') == 'AES' else 8
-        if (len(dpg.get_value('key'))) < min_key_length or (len(dpg.get_value('key')) % min_key_length != 0):
-            return
+        if dpg.get_value('algorithm') == 'AES' and len(dpg.get_value('key')) not in self.__aes_key_length:
+            return None
+        elif dpg.get_value('algorithm') == 'DES' and len(dpg.get_value('key')) not in self.__des_key_length:
+            return None
         ImageEncrypter.encrypt_image(self.__image_path, dpg.get_value('key'),
                                      dpg.get_value('algorithm'), dpg.get_value('mode'))
         width, height, channels, img_data = dpg.load_image('images/encrypted.jpg')
@@ -82,3 +87,9 @@ class App:
             dpg.add_static_texture(width=min(width, 640), height=min(height, 480), default_value=img_data,
                                    tag='encrypted_image_texture')
         dpg.add_image('encrypted_image_texture', parent='encrypted_image_container', tag='encrypted_image')
+
+    @staticmethod
+    def __generate_key():
+        digits = '0123456789'
+        key_sym_amount = 16 if dpg.get_value('algorithm') == 'AES' else 8
+        dpg.set_value('key', int(''.join([random.choice(digits) for _ in range(key_sym_amount)])))

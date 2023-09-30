@@ -4,7 +4,6 @@ from Crypto.Util.Padding import pad
 
 
 class ImageEncrypter:
-    BLOCK_SIZE = 16
     AES_ENCRYPTING_MODES = {'ECB': AES.MODE_ECB,
                             'CBC': AES.MODE_CBC,
                             'CFB': AES.MODE_CFB,
@@ -20,7 +19,7 @@ class ImageEncrypter:
     def encrypt_image(cls, img_path: str, key: str, algorithm: str = 'AES', mode: str = 'ECB'):
         image = PIL.Image.open(img_path)
         ciphertext = ''
-        block_size = cls.BLOCK_SIZE if mode != 'CTR' else cls.BLOCK_SIZE * 4
+        block_size: int = 16 if algorithm == 'AES' else 8
         if algorithm == 'AES':
             cipher = AES.new(key.encode('utf-8'), cls.AES_ENCRYPTING_MODES[mode])
             ciphertext = cipher.encrypt(pad(image.tobytes(), block_size))
