@@ -43,30 +43,28 @@ def rsa_app_page(page: ft.Page):
     encrypted_message_field = ft.Text(value='')
     decrypted_message_field = ft.Text(value='')
     page.add(
-        ft.Container(
-            content=ft.Column(
-                controls=[
-                    ft.Text(value='RSA Encryptor/Decryptor', size=50),
-                    ft.Row(
-                        controls=[
-                            generate_keys_btn,
-                            ft.Column(
-                                controls=[
-                                    open_key_field,
-                                    close_key_filed
-                                ]
-                            )
-                        ]
-                    ),
-                    original_message_field,
-                    encrypt_message_btn,
-                    ft.Text(value='Encrypted text:', size=20),
-                    encrypted_message_field,
-                    decrypt_message_btn,
-                    ft.Text(value='Decrypted text:', size=20),
-                    decrypted_message_field
-                ]
-            ),
-            alignment=ft.alignment.center
+        ft.Column(
+            controls=[
+                ft.Text(value='RSA Encryptor/Decryptor', size=50),
+                ft.Row(
+                    controls=[
+                        generate_keys_btn,
+                        ft.Column(
+                            controls=[
+                                open_key_field,
+                                close_key_filed
+                            ]
+                        )
+                    ]
+                ),
+                original_message_field,
+                encrypt_message_btn,
+                ft.Text(value='Encrypted text:', size=20),
+                encrypted_message_field,
+                decrypt_message_btn,
+                ft.Text(value='Decrypted text:', size=20),
+                decrypted_message_field
+            ],
         )
     )
+    page.scroll = ft.ScrollMode.ADAPTIVE
