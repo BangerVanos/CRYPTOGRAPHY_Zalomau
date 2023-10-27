@@ -1,0 +1,1 @@
+SHA1(original_text.txt)= ab391996f748f7c5e4552018aa6d2f8ca479a002
